@@ -1,5 +1,5 @@
 require("dotenv").config();
-const sequelize = require("./models/database");
+const sequelize = require("./test/configTestDb");
 const Server = require("./models/server");
 sequelize
   .sync() // Esto crea las tablas si no existen
