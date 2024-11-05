@@ -1,19 +1,37 @@
-const connection = require('../models/database');
-
-const usuariosGet = (req, res) => {
-    connection.query('SELECT * FROM estudiante', (err, results) => {
-        if (err) {
-            return res.status(500).json({
-                ok: false,
-                msg: 'Error connecting to database'
-            });
-        }
-
-        res.json({
-            ok: true,
-            usuarios: results
-        });
-    });
-}
-
-module.exports = { usuariosGet };
+const Usuario = require("../models/Usuario");
+const crearUsuario = async (req, res) => {
+  try {
+    const usuario = await Usuario.create(req.body);
+    res.status(201).json(usuario);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+const obtenerUsuarios = async (req, res) => {
+  const usuarios = await Usuario.findAll();
+  res.json(usuarios);
+};
+const actualizarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Usuario.update(req.body, { where: { id } });
+    res.json({ message: "Usuario actualizado correctamente" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+const eliminarUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Usuario.destroy({ where: { id } });
+    res.json({ message: "Usuario eliminado correctamente" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+module.exports = {
+  crearUsuario,
+  obtenerUsuarios,
+  actualizarUsuario,
+  eliminarUsuario,
+};
